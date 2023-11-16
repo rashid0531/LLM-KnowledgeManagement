@@ -34,7 +34,6 @@ def text_splitters(data):
     return docs
 
 def create_llm(docs, local_vector_dir: Path):
-    # embeddings = OpenAIEmbeddings(engine="WBU-ADA-002", chunk_size=1)
     embeddings = OpenAIEmbeddings(
         openai_api_base=API_BASE,
         openai_api_type=API_TYPE,
@@ -66,11 +65,6 @@ def create_chain(llm, vector_store):
     return conversation_chain
 
 if __name__ == "__main__":
-
-    # openai.api_key = "0a66929660e540109d6018844a972748"
-    # openai.api_version = "2023-05-15"
-    # openai.api_base = "https://wbu-gpt-4.openai.azure.com/"
-    # openai.api_type = "azure"
     
     pdf_dataset_directory =  r'./PDFBased/KnowledgeBase_PDF/'
     local_save_directory = Path('./PDFBased/pdf_vector_store/')
@@ -86,10 +80,7 @@ if __name__ == "__main__":
                 return_source_documents=True
             )
 
-    # question = "How long should I get the maternity benefits for?"
     question2 = "What are the health impacts of cannabis legalization in Canada?"
-    # question3 = "How can a customer make repayment arrangements?"
-    # question4 = "What is the process for applying for EI benefits?" 
 
     result = qa_chain({"query": question2})
     print('Answer: ', result['result'])
