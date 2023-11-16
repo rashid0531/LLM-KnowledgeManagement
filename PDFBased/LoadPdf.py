@@ -10,7 +10,7 @@ from langchain.chains import ConversationalRetrievalChain
 from pathlib import Path
 import os
 import openai
-from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION
+from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATION
 
 from langchain.chat_models import AzureChatOpenAI
 
@@ -34,10 +34,7 @@ def text_splitters(data):
     return docs
 
 def create_llm(docs, local_vector_dir: Path):
-    embeddings = OpenAIEmbeddings(
-        openai_api_base=API_BASE,
-        openai_api_type=API_TYPE,
-    )
+    embeddings = OpenAIEmbeddings()
     file_name = "faiss_index"
     path_to_vectordb = local_vector_dir.joinpath(file_name)
     if len(os.listdir(local_vector_dir)) == 0:
@@ -45,14 +42,7 @@ def create_llm(docs, local_vector_dir: Path):
         vectorStore_openAI.save_local(path_to_vectordb)
     else:
         vectorStore_openAI = FAISS.load_local(path_to_vectordb, embeddings)
-
-    llm = AzureChatOpenAI(deployment_name="WBU-GPT-4",
-                      model_name=openai.api_type,
-                      openai_api_base=openai.api_base,
-                      openai_api_version=openai.api_version,
-                      openai_api_key= openai.api_key,
-                      temperature = 0.0)
-
+    llm = ChatOpenAI(model_name='gpt-4', temperature=0)
     return llm, vectorStore_openAI
 
 def create_chain(llm, vector_store):
@@ -65,6 +55,8 @@ def create_chain(llm, vector_store):
     return conversation_chain
 
 if __name__ == "__main__":
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+    openai.organization = ORGANIZATION
     
     pdf_dataset_directory =  r'./PDFBased/KnowledgeBase_PDF/'
     local_save_directory = Path('./PDFBased/pdf_vector_store/')
