@@ -9,7 +9,7 @@ sys.path.append('../')
 import openai_settings as settings
 
 # Setting page title and header
-st.set_page_config(page_title="CMA - GenAI-BOT ", page_icon='./CGI_compressed_logo.png')
+st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
 st.markdown("<h1 style='text-align: center;'>CMA - GenAI-BOT</h1>", unsafe_allow_html=True)
 
 # Set org ID and API key

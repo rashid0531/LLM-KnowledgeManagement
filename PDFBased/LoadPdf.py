@@ -73,7 +73,6 @@ if __name__ == "__main__":
             )
 
     question2 = "What are the health impacts of cannabis legalization in Canada?"
-
     result = qa_chain({"query": question2})
     print('Answer: ', result['result'])
     print('Source: ', result["source_documents"][0])
