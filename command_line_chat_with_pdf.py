@@ -1,17 +1,9 @@
-import os
-import tempfile
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import PyPDFLoader
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.vectorstores import DocArrayInMemorySearch
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import UnstructuredURLLoader, PyPDFDirectoryLoader
+from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
-import pickle
-import faiss
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
@@ -20,7 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from pathlib import Path
 import os
 import openai
-from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATION
+from KnowledgeBase_PDF.openai_settings import ORGANIZATION
 
 st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
 st.markdown("<h1 style='text-align: center;'>CMA - GenAI-BOT</h1>", unsafe_allow_html=True)
@@ -98,7 +90,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 openai.organization = ORGANIZATION
 
 pdf_dataset_directory = r'./KnowledgeBase_PDF/'
-local_save_directory = Path('pdf_vector_store/')
+local_save_directory = Path('KnowledgeBase_PDF/pdf_vector_store/')
 
 data = load_pdfs(pdf_dataset_directory)
 retriever = configure_retriever(data, create_local_vectordb=True, local_vector_dir=local_save_directory)

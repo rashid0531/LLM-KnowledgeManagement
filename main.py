@@ -1,6 +1,4 @@
-import tempfile
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader
 from langchain.chat_models import AzureChatOpenAI
 from langchain.memory import ConversationBufferMemory
@@ -8,15 +6,13 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
-from langchain.vectorstores import DocArrayInMemorySearch
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain.prompts.chat import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.vectorstores import FAISS
 
 import os
 from pathlib import Path
 
-from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATION, DEPLOYMENT_NAME, MODEL_VERSION
+from KnowledgeBase_PDF.openai_settings import API_BASE, API_KEY, API_TYPE, DEPLOYMENT_NAME, MODEL_VERSION
 
 st.set_page_config(page_title="CreditUnion-Assistant")
 
@@ -30,7 +26,7 @@ st.markdown(second_title, unsafe_allow_html=True)
 
 pdfs_base = "KnowledgeBase_PDF/"
 rebuild_vectordb = False
-local_vector_dir = Path('./pdf_vector_store/')
+local_vector_dir = Path('KnowledgeBase_PDF/pdf_vector_store/')
 file_name = "faiss_index"
 path_to_vectordb = local_vector_dir.joinpath(file_name)
 

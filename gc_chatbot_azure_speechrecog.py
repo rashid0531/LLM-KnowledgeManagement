@@ -1,13 +1,12 @@
 import openai
 import streamlit as st
 from streamlit_chat import message
-import os
 import speech_recognition as sr
 import sys
 
 sys.path.append('/')
 
-import openai_settings as settings
+from KnowledgeBase_PDF import openai_settings as settings
 
 # Setting page title and header
 st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
