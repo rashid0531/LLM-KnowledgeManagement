@@ -13,23 +13,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTex
 from langchain.prompts.chat import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.vectorstores import FAISS
 
-import os, shutil
+import os
 from pathlib import Path
-import time
-import openai
+
 from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATION, DEPLOYMENT_NAME, MODEL_VERSION
-
-# Settings from GTO. Should be removed for Credit Union usage.
-BASE_URL = "https://cgi-openai-gpt4.openai.azure.com/"
-API_KEY = "5a9d9a0128e7471eb12ec5efa878d2e4"
-DEPLOYMENT_NAME = "gpt-4-32k"
-MODEL_VERSION = "2023-07-01-preview"
-
-
-# BASE_URL = API_BASE
-# # os.environ['OPENAI_API_KEY'] = API_KEY
-# openai.api_key = API_KEY
-# openai.organization = ORGANIZATION
 
 st.set_page_config(page_title="CreditUnion-Assistant")
 
@@ -128,7 +115,7 @@ memory = ConversationBufferMemory(memory_key="chat_history", chat_memory=msgs, r
 
 # Setup LLM and QA chain
 llm = AzureChatOpenAI(
-    openai_api_base=BASE_URL,
+    openai_api_base=API_BASE,
     openai_api_version=MODEL_VERSION,
     deployment_name=DEPLOYMENT_NAME,
     openai_api_key=API_KEY,
