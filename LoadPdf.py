@@ -1,7 +1,5 @@
 from langchain.document_loaders import UnstructuredURLLoader, PyPDFDirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
-import pickle
-import faiss
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
@@ -10,28 +8,30 @@ from langchain.chains import ConversationalRetrievalChain
 from pathlib import Path
 import os
 import openai
-from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATION
+from openai_settings import ORGANIZATION
 
-from langchain.chat_models import AzureChatOpenAI
 
 def load_urls(list_of_urls):
     loaders = UnstructuredURLLoader(urls=list_of_urls)
     data = loaders.load()
     return data
 
+
 def load_pdfs(pdf_dataset_directory):
     loader = PyPDFDirectoryLoader(pdf_dataset_directory)
     pages = loader.load()
     return pages
 
+
 def text_splitters(data):
     text_splitter = CharacterTextSplitter(
-                                    separator='\n', 
-                                    chunk_size=1000, 
-                                    chunk_overlap=200
-                                )
+        separator='\n',
+        chunk_size=1000,
+        chunk_overlap=200
+    )
     docs = text_splitter.split_documents(data)
     return docs
+
 
 def create_llm(docs, local_vector_dir: Path):
     embeddings = OpenAIEmbeddings()
@@ -45,32 +45,35 @@ def create_llm(docs, local_vector_dir: Path):
     llm = ChatOpenAI(model_name='gpt-4', temperature=0)
     return llm, vectorStore_openAI
 
+
 def create_chain(llm, vector_store):
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
-        llm = llm,
-        retriever = vector_store.as_retriever(),
-        memory = memory
+        llm=llm,
+        retriever=vector_store.as_retriever(),
+        memory=memory
     )
     return conversation_chain
+
 
 if __name__ == "__main__":
     openai.api_key = os.getenv('OPENAI_API_KEY')
     openai.organization = ORGANIZATION
-    
-    pdf_dataset_directory =  r'./PDFBased/KnowledgeBase_PDF/'
+
+    pdf_dataset_directory = r'./PDFBased/KnowledgeBase_PDF/'
     local_save_directory = Path('./PDFBased/pdf_vector_store/')
-    
+
     data = load_pdfs(pdf_dataset_directory)
     docs = text_splitters(data)
     llm, vectorStore_openAI = create_llm(docs, local_save_directory)
 
     from langchain.chains import RetrievalQA
+
     qa_chain = RetrievalQA.from_chain_type(
-                llm,
-                retriever=vectorStore_openAI.as_retriever(),
-                return_source_documents=True
-            )
+        llm,
+        retriever=vectorStore_openAI.as_retriever(),
+        return_source_documents=True
+    )
 
     question2 = "What are the health impacts of cannabis legalization in Canada?"
     result = qa_chain({"query": question2})

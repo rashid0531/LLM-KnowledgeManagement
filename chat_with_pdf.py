@@ -25,14 +25,15 @@ from openai_settings import API_BASE, API_KEY, API_TYPE, API_VERSION, ORGANIZATI
 st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
 st.markdown("<h1 style='text-align: center;'>CMA - GenAI-BOT</h1>", unsafe_allow_html=True)
 
+
 def configure_retriever(docs, create_local_vectordb=False, local_vector_dir=None):
     # Split documents
     text_splitter = CharacterTextSplitter(
-                        separator='\n', 
-                        chunk_size=1000, 
-                        chunk_overlap=200
-                    )
-    splits = text_splitter.split_documents(docs)
+        separator='\n',
+        chunk_size=1000,
+        chunk_overlap=200
+    )
+    vector_doc_splits = text_splitter.split_documents(docs)
 
     # Create embeddings and store in vectordb
     embeddings = OpenAIEmbeddings()
@@ -41,7 +42,7 @@ def configure_retriever(docs, create_local_vectordb=False, local_vector_dir=None
         file_name = "faiss_index"
         path_to_vectordb = local_vector_dir.joinpath(file_name)
         if len(os.listdir(local_vector_dir)) == 0:
-            vectordb = FAISS.from_documents(docs, embeddings)
+            vectordb = FAISS.from_documents(vector_doc_splits, embeddings)
             vectordb.save_local(path_to_vectordb)
         else:
             vectordb = FAISS.load_local(path_to_vectordb, embeddings)
@@ -51,6 +52,7 @@ def configure_retriever(docs, create_local_vectordb=False, local_vector_dir=None
     # Define retriever
     retriever = vectordb.as_retriever(search_type="mmr", search_kwargs={"k": 2, "fetch_k": 4})
     return retriever
+
 
 def load_pdfs(pdf_dataset_directory):
     loader = PyPDFDirectoryLoader(pdf_dataset_directory)
@@ -95,8 +97,8 @@ class PrintRetrievalHandler(BaseCallbackHandler):
 openai.api_key = os.getenv('OPENAI_API_KEY')
 openai.organization = ORGANIZATION
 
-pdf_dataset_directory =  r'./KnowledgeBase_PDF/'
-local_save_directory = Path('./pdf_vector_store/')
+pdf_dataset_directory = r'./KnowledgeBase_PDF/'
+local_save_directory = Path('pdf_vector_store/')
 
 data = load_pdfs(pdf_dataset_directory)
 retriever = configure_retriever(data, create_local_vectordb=True, local_vector_dir=local_save_directory)

@@ -4,7 +4,8 @@ from streamlit_chat import message
 import os
 import speech_recognition as sr
 import sys
-sys.path.append('../')
+
+sys.path.append('/')
 
 import openai_settings as settings
 
@@ -36,6 +37,7 @@ if 'messages' not in st.session_state:
 # model = "WBU-GPT-4"
 model = "WBU-GPT-35"
 
+
 def take_voice_input():
     r = sr.Recognizer()
     mic = sr.Microphone()
@@ -43,7 +45,8 @@ def take_voice_input():
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     return r.recognize_google(audio)
-    
+
+
 # generate a response
 def generate_response(prompt):
     st.session_state['messages'].append({"role": "user", "content": prompt})
@@ -61,6 +64,7 @@ def generate_response(prompt):
     completion_tokens = completion.usage.completion_tokens
     return response, total_tokens, prompt_tokens, completion_tokens
 
+
 # container for chat history
 response_container = st.container()
 # container for text box
@@ -68,9 +72,9 @@ container = st.container()
 
 with container:
     st.session_state['messages'].append(
-        {'role': 'assistant', 'content': 
-        """This is an Assistant of Canadian medical association Journal."""
-        })
+        {'role': 'assistant', 'content':
+            """This is an Assistant of Canadian medical association Journal."""
+         })
 
     st.session_state['messages'].append(
         {'role': 'system', 'content': """
@@ -82,7 +86,7 @@ with container:
         Please use bullet points while answering and provide reference and url link of the subsection that you used to answer the question from the provided links. \
         At the beginning, start your conversation with greetings. 
         """}
-    )  
+    )
 
     with st.form(key='my_form', clear_on_submit=True):
         user_input = st.text_area("You:", key='input', height=100)
@@ -99,7 +103,6 @@ with container:
         output, total_tokens, prompt_tokens, completion_tokens = generate_response(voice_registered)
         st.session_state['past'].append(voice_registered)
         st.session_state['generated'].append(output)
-
 
 if st.session_state['generated']:
     with response_container:
