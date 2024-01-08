@@ -124,10 +124,6 @@ llm = AzureChatOpenAI(
     streaming=True
 )
 
-# llm = ChatOpenAI(
-#     model_name="gpt-3.5-turbo", openai_api_key=openai.api_key, temperature=0, streaming=True
-# )
-
 qa_chain = ConversationalRetrievalChain.from_llm(
     llm, retriever=retriever, memory=memory, verbose=True
 )
