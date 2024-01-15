@@ -8,7 +8,7 @@ from langchain.chains import ConversationalRetrievalChain
 from pathlib import Path
 import os
 import openai
-from KnowledgeBase_PDF.openai_settings import ORGANIZATION
+from openai_settings import ORGANIZATION
 
 
 def load_urls(list_of_urls):

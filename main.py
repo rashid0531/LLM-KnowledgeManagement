@@ -12,7 +12,7 @@ from langchain.vectorstores import FAISS
 import os
 from pathlib import Path
 
-from KnowledgeBase_PDF.openai_settings import API_BASE, API_KEY, API_TYPE, DEPLOYMENT_NAME, MODEL_VERSION
+from openai_settings import API_BASE, API_KEY, API_TYPE, DEPLOYMENT_NAME, MODEL_VERSION
 
 st.set_page_config(page_title="CreditUnion-Assistant")
 
@@ -26,7 +26,7 @@ st.markdown(second_title, unsafe_allow_html=True)
 
 pdfs_base = "KnowledgeBase_PDF/"
 rebuild_vectordb = False
-local_vector_dir = Path('KnowledgeBase_PDF/pdf_vector_store/')
+local_vector_dir = Path('pdf_vector_store/')
 file_name = "faiss_index"
 path_to_vectordb = local_vector_dir.joinpath(file_name)
 

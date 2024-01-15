@@ -12,7 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from pathlib import Path
 import os
 import openai
-from KnowledgeBase_PDF.openai_settings import ORGANIZATION
+from openai_settings import ORGANIZATION
 
 st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
 st.markdown("<h1 style='text-align: center;'>CMA - GenAI-BOT</h1>", unsafe_allow_html=True)
@@ -90,7 +90,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 openai.organization = ORGANIZATION
 
 pdf_dataset_directory = r'./KnowledgeBase_PDF/'
-local_save_directory = Path('KnowledgeBase_PDF/pdf_vector_store/')
+local_save_directory = Path('pdf_vector_store/')
 
 data = load_pdfs(pdf_dataset_directory)
 retriever = configure_retriever(data, create_local_vectordb=True, local_vector_dir=local_save_directory)

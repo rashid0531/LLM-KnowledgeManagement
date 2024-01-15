@@ -6,7 +6,7 @@ import sys
 
 sys.path.append('/')
 
-from KnowledgeBase_PDF import openai_settings as settings
+import openai_settings as settings
 
 # Setting page title and header
 st.set_page_config(page_title="CMA - GenAI-BOT", page_icon='./CGI_compressed_logo.png')
@@ -34,7 +34,7 @@ if 'messages' not in st.session_state:
     ]
 
 # model = "WBU-GPT-4"
-model = "WBU-GPT-35"
+model = settings.DEPLOYMENT_NAME
 
 
 def take_voice_input():
@@ -78,7 +78,7 @@ with container:
     st.session_state['messages'].append(
         {'role': 'system', 'content': """
         Here is a weblink provided in curly bracket that contain information about Canadian Medical Association Journal.; \
-        url links: {https://www.cmaj.ca/content};
+        url links: {https://www.cmaj.ca/content/195/36/E1210};
 
         You are a professional chatbot for Canadian medical association Journal. Answer questions based on the content of the link that I provided above. \
         While answering, please try to use numebr such as percentage (%), descriptive statistics, population etc. to make your answer looks mathmatically right. \
